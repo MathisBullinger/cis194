@@ -32,3 +32,10 @@ build = foldl (flip insert) Leaf
 inOrder :: MessageTree -> [LogMessage]
 inOrder Leaf         = []
 inOrder (Node l m g) = (inOrder l) ++ [m] ++ (inOrder g)
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong logs = map (\(LogMessage _ _ msg) -> msg) (inOrder.build $ filter isRelevant logs) 
+
+isRelevant :: LogMessage -> Bool
+isRelevant (LogMessage (Error lvl) _ _) = lvl >= 50
+isRelevant _ = False
