@@ -15,3 +15,20 @@ parseMessage str = let parts = words str in
 
 parse :: String -> [LogMessage]
 parse str = map parseMessage (lines str)
+
+insert :: LogMessage -> MessageTree -> MessageTree
+
+insert (Unknown _) tree = tree
+insert msg Leaf         = Node Leaf msg Leaf
+insert msg (Node l m g) = let (LogMessage _ ts _) = m
+                              (LogMessage _ tsI _) = msg in 
+                          if tsI < ts
+                            then Node (insert msg l) m g 
+                            else Node l m (insert msg g)
+
+build :: [LogMessage] -> MessageTree
+build = foldl (flip insert) Leaf
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf         = []
+inOrder (Node l m g) = (inOrder l) ++ [m] ++ (inOrder g)
