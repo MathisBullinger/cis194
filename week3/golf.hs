@@ -1,7 +1,4 @@
 module Golf where
 
 skip :: [a] -> [[a]]
-skip x = map (nth x) [1..length x]
-
-nth :: [a] -> Int -> [a]
-nth list n = map (\(e, _) -> e) (filter (\(_, i) -> i `mod` n == 0) (zip list [1..]))
+skip x = [[fst e | e<-zip x [1..], mod (snd e) n == 0] | n<-[1..length x]] 
