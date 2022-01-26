@@ -36,3 +36,13 @@ addNode tree el = case tree of
                   in if rc < lc
                     then (Node (1+rc) l d rn, 1+rc)
                     else (Node (1+lc) ln d r, 1+lc)
+
+
+-- exercise 3
+
+xor :: [Bool] -> Bool
+xor = foldr (/=) False
+
+map' :: (a -> b) -> [a] -> [b]
+map' f = foldr (\a b -> (f a) : b) []
+
