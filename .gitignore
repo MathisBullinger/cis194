@@ -1,2 +1,4 @@
 *.swp
 *.log
+week5/*
+!week5/Calc.hs
