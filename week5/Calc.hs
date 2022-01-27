@@ -1,5 +1,8 @@
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
+
 import ExprT
 import Parser
+import qualified StackVM as S
 
 eval :: ExprT -> Integer
 eval (Lit n)   = n
@@ -45,3 +48,14 @@ instance Expr Mod7 where
   add (Mod7 a) (Mod7 b) = Mod7 (a + b `mod` 7)
   mul (Mod7 a) (Mod7 b) = Mod7 (a * b `mod` 7)
 
+instance Expr S.Program where
+  lit x = [S.PushI x]
+  add a b = a ++ b ++ [S.Add]
+  mul a b = a ++ b ++ [S.Mul]
+
+compile :: String -> Maybe S.Program
+compile = parseExp lit add mul
+
+exec :: (Maybe S.Program) -> Maybe (Either String S.StackVal)
+exec Nothing = Nothing
+exec (Just x) = Just $ S.stackVM x
